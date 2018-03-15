@@ -1,20 +1,22 @@
-# Syncfusion Enterprise Server #
+# Syncfusion Dashboard Server #
 
 ### How do I get set up? ###
 
 * Clone the branch
-* Follow the steps as mentioned in the link - in the section `Steps to be followed by the developers - while cloning a new branch`
-https://syncfusion.atlassian.net/wiki/display/UMP/2016/11/01/Development+Environment+Setup#DevelopmentEnvironmentSetup-Stepstobefollowedbythedevelopers-whilecloninganewbranch
+* We have two projects in this application
+	* API.Helper
+	* API.Sample
 
 
-### How Development Phase should be ? ###
-Read the below link for this.
+### API.Helper ###
 
-https://syncfusion.atlassian.net/wiki/display/UMP/2016/11/01/Development+Environment+Setup#DevelopmentEnvironmentSetup-HowDevelopmentphaseisaffectedbytheCI
+* This project holds the methods which calls our Syncfusion API endpoints directly and return the corresponding result.
+* This project can be referred in your application and call the helper methods from your application. 
 
 
-### Steps to be done before running the project
+### API.Sample ###
 
-As we have configured Windows Authentication in our project, we need to unlock Windows Authententication in IIS express so as to run the project. Follow the option #2 in the below link.
+* This project holds the sample source code which requires to call each of the Syncfusion APIs programmatically.
+* You can refer this and use the required sample codes in your application. 
 
-http://stackoverflow.com/a/4813716/2106928
+
