@@ -6,6 +6,7 @@ using Syncfusion.Dashboard.Server.Api.Helper.V1;
 using Syncfusion.Dashboard.Server.Api.Helper.V2.Models;
 using Syncfusion.Dashboard.Server.Api.Helper.V1.Models;
 using Syncfusion.Dashboard.Server.API.Helper;
+using System.Net;
 
 namespace Syncfusion.Dashboard.Server.API.Sample
 {
@@ -19,6 +20,9 @@ namespace Syncfusion.Dashboard.Server.API.Sample
 
         public static void Main(string[] args)
         {
+            //TLS support for 1.0, 1.1 and 1.2
+            ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls12;
+
             #region Token generation
 
             var token = new ServerApiHelper().Connect(SyncfusionDashboardServerUrl, userName, password);
