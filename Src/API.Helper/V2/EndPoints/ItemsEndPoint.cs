@@ -19,9 +19,9 @@ namespace Syncfusion.Dashboard.Server.API.Helper.V2.EndPoints
         }
 
         /// <summary>
-        /// This method returns list of items for the itemtype category, dashboard, datasource, widget and schedule.
+        /// This method returns list of items for the itemtype category, dashboard, datasource and widget.
         /// </summary>
-        /// <param name="itemType">Item type (category, dashboard, datasource, widget and schedule)</param>
+        /// <param name="itemType">Item type (category, dashboard, datasource and widget)</param>
         /// <param name="serverPath">Category path</param>
         /// <returns>List of items for the itemtype.</returns>
 
@@ -43,9 +43,9 @@ namespace Syncfusion.Dashboard.Server.API.Helper.V2.EndPoints
         }
 
         /// <summary>
-        /// This method returns item details for the values Category Id, Dashboard Id, Datasource Id, Widget Id and Schedule Id.
+        /// This method returns item details for the values Category Id, Dashboard Id, Datasource Id and Widget Id.
         /// </summary>
-        /// <param name="id">The id values may be Category Id, Dashboard Id, Datasource Id, Widget Id and Schedule Id.</param>
+        /// <param name="id">The id values may be Category Id, Dashboard Id, Datasource Id and Widget Id.</param>
         /// <returns>Item details for the values.</returns>
 
         public ApiSpecifiedItemDetail GetItemDetail(Guid id)
