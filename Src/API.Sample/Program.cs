@@ -3,9 +3,15 @@ using System.IO;
 using System.Linq;
 using Syncfusion.Dashboard.Server.API.Helper.V2;
 using Syncfusion.Dashboard.Server.Api.Helper.V1;
+using Syncfusion.Dashboard.Server.API.Helper.V3;
+using Syncfusion.Dashboard.Server.API.Helper.V4;
 using Syncfusion.Dashboard.Server.Api.Helper.V2.Models;
 using Syncfusion.Dashboard.Server.Api.Helper.V1.Models;
+using Syncfusion.Dashboard.Server.Api.Helper.V3.Models;
+using Syncfusion.Dashboard.Server.Api.Helper.V4.Models;
 using Syncfusion.Dashboard.Server.API.Helper;
+using System.Net;
+using System;
 
 namespace Syncfusion.Dashboard.Server.API.Sample
 {
@@ -19,6 +25,9 @@ namespace Syncfusion.Dashboard.Server.API.Sample
 
         public static void Main(string[] args)
         {
+            //TLS support for 1.0, 1.1 and 1.2
+            ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls12;
+
             #region Token generation
 
             var token = new ServerApiHelper().Connect(SyncfusionDashboardServerUrl, userName, password);
@@ -36,6 +45,20 @@ namespace Syncfusion.Dashboard.Server.API.Sample
 
             var v2ApiObject = new ServerClientV2();
             v2ApiObject.Connect(SyncfusionDashboardServerUrl, userName, password);
+
+            #endregion
+
+            #region Connect to version 3
+
+            var v3ApiObject = new ServerClientV3();
+            v3ApiObject.Connect(SyncfusionDashboardServerUrl, userName, password);
+
+            #endregion
+
+            #region Connect to version 4
+
+            var v4ApiObject = new ServerClientV4();
+            v4ApiObject.Connect(SyncfusionDashboardServerUrl, userName, password);
 
             #endregion
 
@@ -167,17 +190,13 @@ namespace Syncfusion.Dashboard.Server.API.Sample
 
             var dashboardItems = v2ApiObject.ItemsEndPoint().GetItems(ItemType.Dashboard);
 
-           // Get category list
+            // Get category list
 
-           var categoryItems = v2ApiObject.ItemsEndPoint().GetItems(ItemType.Category);
+            var categoryItems = v2ApiObject.ItemsEndPoint().GetItems(ItemType.Category);
 
             // Get datasource list
 
             var datasourceItems = v2ApiObject.ItemsEndPoint().GetItems(ItemType.Datasource);
-
-            // Get schedule list
-
-            var scheduleItems = v2ApiObject.ItemsEndPoint().GetItems(ItemType.Schedule);
 
             // Get widget list
 
@@ -192,7 +211,6 @@ namespace Syncfusion.Dashboard.Server.API.Sample
             var dashboardId = dashboardItems.Select(i => i.Id).FirstOrDefault(); //Assign the Id of first item in the dashboard list
             var categoryId = categoryItems.Select(i => i.Id).FirstOrDefault(); //Assign the Id of first item in the category list
             var datasourceId = datasourceItems.Select(i => i.Id).FirstOrDefault(); //Assign the Id of first item in the datasource list
-            var scheduleId = scheduleItems.Select(i => i.Id).FirstOrDefault(); //Assign the Id of first item in the schedule list
             var widgetId = widgetItems.Select(i => i.Id).FirstOrDefault(); //Assign the Id of first item in the widget list
 
             #endregion
@@ -210,10 +228,6 @@ namespace Syncfusion.Dashboard.Server.API.Sample
             // Get details of particular datasource
 
             var datasourceDetails = v2ApiObject.ItemsEndPoint().GetItemDetail(datasourceId);
-
-            // Get details of particular schedule
-
-            var scheduleDetails = v2ApiObject.ItemsEndPoint().GetItemDetail(scheduleId);
 
             // Get details of particular widget
 
@@ -390,6 +404,8 @@ namespace Syncfusion.Dashboard.Server.API.Sample
 
             #endregion
 
+            var scheduleId = Guid.Parse("716e1f81-a31d-4471-9126-0679c641da1a"); //Schedule Id from the server.
+
             #region Delete item
 
             // Delete dashboard
@@ -546,6 +562,337 @@ namespace Syncfusion.Dashboard.Server.API.Sample
 
             #endregion
 
+            #region V3
+
+            #region V3 Items
+
+            #region Add file
+
+            var addFile = v3ApiObject.ItemsEndPoint2().AddFile(new ApiFileAdd()
+            {
+                Name = "Test file3",
+                Description = "Testing purpose",
+                ItemContent = File.ReadAllBytes("../../FIFA World Cup 2014 - Brazil (Sample datasource v2.3).syds"),
+                Extension = ".syds"
+            });
+
+            #endregion
+
+            #region Update file
+
+            var updateFile = v3ApiObject.ItemsEndPoint2().UpdateFile(new ApiFileUpdate()
+            {
+                ItemId = fileId,
+                Name = "Test file-update5",
+                Description = "Testing purpose",
+                ItemContent = File.ReadAllBytes("../../FIFA World Cup 2014 - Brazil (Sample datasource v2.3).syds"),
+                Extension = ".sydx"
+            });
+
+            #endregion
+
+            #region Get Dashboard Parameter
+
+            var dashboardParameter = v3ApiObject.ItemsEndPoint2().GetDashboardParameter(new ItemRequest()
+            {
+                UserId = userId,
+                ItemId = dashboardId
+            });
+
+            #endregion
+
+            #endregion
+
+            #endregion
+
+            #region V4
+
+            #region V4 Items
+
+            #region Get Items
+
+            // Get dashboard list
+
+            var dashboardItemsV4 = v4ApiObject.ItemsEndPoint3().GetItems(ItemTypeV4.Dashboard);
+
+            // Get category list
+
+            var categoryItemsV4 = v4ApiObject.ItemsEndPoint3().GetItems(ItemTypeV4.Category);
+
+            // Get datasource list
+
+            var datasourceItemsV4 = v4ApiObject.ItemsEndPoint3().GetItems(ItemTypeV4.Datasource);
+
+            // Get widget list
+
+            var widgetItemsV4 = v4ApiObject.ItemsEndPoint3().GetItems(ItemTypeV4.Widget);
+
+            // Get file list
+
+            var filesV4 = v4ApiObject.ItemsEndPoint3().GetItems(ItemTypeV4.File);
+
+            #endregion
+
+            #region Variable declaration to get details of particular items
+
+            var dashboardIdV4 = dashboardItemsV4.Select(i => i.Id).FirstOrDefault(); //Assign the Id of first item in the dashboard list
+            var categoryIdV4 = categoryItemsV4.Select(i => i.Id).FirstOrDefault(); //Assign the Id of first item in the category list
+            var datasourceIdV4 = datasourceItemsV4.Select(i => i.Id).FirstOrDefault(); //Assign the Id of first item in the datasource list
+            var widgetIdV4 = widgetItemsV4.Select(i => i.Id).FirstOrDefault(); //Assign the Id of first item in the widget list
+            var fileIdV4 = filesV4.Select(i => i.Id).FirstOrDefault(); //Assign the Id of first item in the files
+
+            #endregion
+
+            #region Get Item Details
+
+            // Get details of particular dashboard
+
+            var dashboardDetailsV4 = v4ApiObject.ItemsEndPoint3().GetItemDetail(dashboardIdV4);
+
+            // Get details of particular category
+
+            var categoryDetailsV4 = v4ApiObject.ItemsEndPoint3().GetItemDetail(categoryIdV4);
+
+            // Get details of particular datasource
+
+            var datasourceDetailsV4 = v4ApiObject.ItemsEndPoint3().GetItemDetail(datasourceIdV4);
+
+            // Get details of particular widget
+
+            var widgetDetailsV4 = v4ApiObject.ItemsEndPoint3().GetItemDetail(widgetIdV4);
+
+            // Get details of particular file
+
+            var fileDetailsV4 = v4ApiObject.ItemsEndPoint3().GetItemDetail(fileIdV4);
+
+            #endregion
+
+            #region Get Shared Datasource
+
+            var dashboardDatasource = v4ApiObject.ItemsEndPoint3().GetSharedDataSources(new ApiSharedDataSourceRequestV4()
+            {
+                UserId = userId,
+                DashboardId = dashboardIdV4
+            });
+
+            #endregion
+
+            #region Get Slideshows
+
+            var getSlideshows = v4ApiObject.ItemsEndPoint3().GetSlideshows();
+
+            #endregion
+
+            #region Get Id of particular Slide
+
+            var slideId = getSlideshows.Select(i => i.Id).FirstOrDefault(); // Assign the Id of first slide
+
+            #endregion
+
+            #region Get Slideshow Details
+
+            var getSlideDetails = v4ApiObject.ItemsEndPoint3().GetSlideshowDetail(slideId);
+
+            #endregion
+
+            #region Add dashboard
+
+            var adddashboardV4 = v4ApiObject.ItemsEndPoint3().AddDashboard(new ApiDashboardAddV4()
+            {
+                Name = "Testing dashboard V4",
+                Description = "Testing purpose V4",
+                CategoryId = categoryIdV4,
+                IsPublic = false, //Set ispublic Value to make and remove Dashboard Public Access
+                ItemContent = File.ReadAllBytes("../../FIFA World Cup 2014 - Brazil (Sample dashboard v2.3).sydx"),
+                IsUnlisted = true
+            });
+
+            #endregion
+
+            #region Add widget
+
+            var addWidgetV4 = v4ApiObject.ItemsEndPoint3().AddWidget(new ApiWidgetAddV4()
+            {
+                Name = "Sample widget V4",
+                Description = "Testing purpose V4",
+                IsPublic = false, //Set ispublic Value to make and remove Dashboard Public Access
+                ItemContent = File.ReadAllBytes("../../FIFA World Cup 2014 – Brazil (Sample widget v2.3).sydw"),
+                IsUnlisted = true
+            });
+
+            #endregion
+
+            #region Add Slideshow
+
+            var addSlideshowV4 = v4ApiObject.ItemsEndPoint3().AddSlideshow(new ApiSlideshowAdd()
+            {
+                Name = "Test Slideshow",
+                Duration = 5,
+                Slides = new List<Slide>
+                {
+                    new Slide
+                    {
+                        OrderNumber = 1,
+                        ItemType = ItemTypeV4.Dashboard,
+                        ItemInfo = new SlideInfo
+                        {
+                            Id = dashboardIdV4,
+                            Name = "test slide",
+                            CategoryId = categoryIdV4,
+                            IsMultiDashboard = false
+                        }
+                    }
+                }
+            });
+
+            #endregion
+
+            #region Update Dashboard
+
+            var updateDashboardV4 = v4ApiObject.ItemsEndPoint3().UpdateDashboard(new ApiDashboardUpdateV4()
+            {
+                DashboardId = dashboardIdV4,
+                IsPublic = false,
+                Name = "Testing dashboard update",
+                ItemContent = File.ReadAllBytes("../../FIFA World Cup 2014 - Brazil (Sample dashboard v2.3).sydx"),
+                IsUnlisted = false
+            });
+
+            #endregion
+
+            #region Update Widget
+
+            var updateWidgetV4 = v4ApiObject.ItemsEndPoint3().UpdateWidget(new ApiWidgetUpdateV4()
+            {
+                Name = "testc v4widget",
+                WidgetId = widgetIdV4,
+                Description = "test",
+                ItemContent = File.ReadAllBytes("../../FIFA World Cup 2014 – Brazil (Sample widget v2.3).sydw"),
+                IsPublic = false,
+                IsUnlisted = false
+            });
+
+            #endregion
+
+            #region Update Dashboard Datasource
+
+            var updateDashboardDatasource = v4ApiObject.ItemsEndPoint3().UpdateDashboardDataSources(new ApiDashboardDataSourceUpdate
+            {
+                DashboardId = dashboardIdV4,
+                DataSourceDetails = new List<DataSourceMappingInfo>
+                {
+                    new DataSourceMappingInfo
+                    {
+                        DataSourceId = datasourceIdV4,
+                        Name = "testV4"
+                    }
+                }
+            });
+
+            #endregion
+
+            #region Update Slideshow
+
+            var updateSlide = v4ApiObject.ItemsEndPoint3().EditSlideshow(slideId, new ApiSlideshowEdit
+            {
+                Name = "update test slide",
+                Duration = 6,
+                Slides = new List<Slide>
+                {
+                    new Slide
+                    {
+                        OrderNumber = 1,
+                        ItemType = ItemTypeV4.Dashboard,
+                        ItemInfo = new SlideInfo
+                        {
+                            Id = dashboardIdV4,
+                            Name = "update slide",
+                            CategoryId = categoryIdV4,
+                            IsMultiDashboard = false
+                        }
+                    },
+                    new Slide
+                    {
+                        OrderNumber = 2,
+                        ItemType = ItemTypeV4.Dashboard,
+                        ItemInfo = new SlideInfo
+                        {
+                            Id = dashboardIdV4,
+                            Name = "update2 slide",
+                            CategoryId = categoryIdV4,
+                            IsMultiDashboard = false
+                        }
+                    }
+                }
+            });
+
+
+            #endregion
+
+            #region Delete Slideshow
+
+            var deleteSlide = v4ApiObject.ItemsEndPoint3().DeleteSlideshow(slideId);
+
+            #endregion
+
+            #endregion
+
+            #region V4 Schedules
+
+            #region Add Schedule
+
+            var addSchedule = v4ApiObject.ScheduleEndPoint().AddSchedule(new ApiDashboardScheduleRequest()
+            {
+                Name = "test schedule new",
+                ExportType = "Pdf",
+                StartTime = "2019-02-07T17:00:00Z",
+                NeverEnd = false,
+                EndAfterOccurrence = 3,
+                EndDate = "2019-03-07T17:30:00Z",
+                UserList = new List<string>
+                {
+                    "test"
+                },
+                ScheduleType = "Hourly",
+                HourlySchedule = new ApiHourlySchedule()
+                {
+                    ScheduleInterval = "00:10"
+                },
+                ItemId = dashboardIdV4
+            });
+
+            #endregion
+
+            #region Update Schedule
+
+            var scheduleIdV4 = Guid.Parse("716e1f81-a31d-4471-9126-0679c641da1a"); //Schedule Id from the server.
+
+            var updateSchedule = v4ApiObject.ScheduleEndPoint().UpdateSchedule(scheduleIdV4, new ApiUpdateScheduleRequest()
+            {
+                Name = "test schedule update",
+                ExportType = "Excel",
+                StartTime = "2019-02-07T12:00:00Z",
+                NeverEnd = false,
+                EndAfterOccurrence = 5,
+                EndDate = "2019-03-07T12:00:00Z",
+                ItemType = ItemType.Schedule.ToString(),
+                UserList = new List<string>
+                {
+                    "master"
+                },
+                ScheduleType = "Hourly",
+                HourlySchedule = new ApiHourlySchedule()
+                {
+                    ScheduleInterval = "00:10"
+                },
+                ItemId = dashboardIdV4
+            });
+
+            #endregion
+
+            #endregion
+
+            #endregion
         }
     }
 }
